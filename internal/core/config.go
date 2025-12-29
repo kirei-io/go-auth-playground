@@ -8,8 +8,9 @@ import (
 )
 
 type Config struct {
-	App AppConfig
-	Db  DbConfig
+	App  AppConfig
+	Db   DbConfig
+	Auth AuthConfig
 }
 
 type AppConfig struct {
@@ -23,6 +24,12 @@ type DbConfig struct {
 	Password string `env:"DB_PASSWORD" env-default:"password"`
 	Name     string `env:"DB_NAME" env-default:"go-auth-playground"`
 	Port     int    `env:"DB_PORT" env-default:"5432"`
+}
+
+type AuthConfig struct {
+	JWTSecret     string `env:"JWT_SECRET" env-default:"very-secret-key"`
+	Issuer        string `env:"JWT_ISSUER" env-default:"go-auth-playground"`
+	TokenHoursTTL int    `env:"JWT_HOURS_TTL" env-default:"24"`
 }
 
 var (
