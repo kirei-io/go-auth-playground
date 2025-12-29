@@ -1,0 +1,15 @@
+#:schema https://json.schemastore.org/any.json
+
+root = "."
+tmp_dir = "tmp"
+
+[build]
+  bin = "./tmp/main"
+  cmd = "go build -o ./tmp/main ./cmd/app/main.go"
+  delay = 1000
+  exclude_dir = ["assets", "tmp", "vendor", "web"]
+  include_ext = ["go", "tpl", "html", "yaml"]
+  stop_on_error = true
+
+[screen]
+  clear_on_rebuild = true
