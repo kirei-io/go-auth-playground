@@ -17,7 +17,8 @@ func main() {
 
 	r := gin.Default()
 
-	authService := auth.NewAuthService(&cfg.Auth)
+	authRepo := auth.NewAuthRepository(database.Clinet)
+	authService := auth.NewAuthService(&cfg.Auth, authRepo)
 	authController := auth.NewAuthController(authService)
 
 	r.GET("/ping", func(c *gin.Context) {

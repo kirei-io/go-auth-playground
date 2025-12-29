@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"time"
+
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 )
@@ -25,9 +27,11 @@ type LoginRequest struct {
 }
 
 type AuthResponse struct {
-	AccessToken string  `json:"token,omitempty"`
-	Email       string  `json:"email"`
-	Role        string  `json:"role"`
-	Name        *string `json:"name"`
-	Login       *string `json:"login"`
+	AccessToken string    `json:"token,omitempty"`
+	Email       string    `json:"email"`
+	Role        string    `json:"role"`
+	Name        *string   `json:"name"`
+	Login       *string   `json:"login"`
+	CreatedAt   time.Time `json:"createdAt"`
+	UpdatedAt   time.Time `json:"updatedAt"`
 }
