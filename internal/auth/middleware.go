@@ -13,7 +13,7 @@ func AuthMiddleware(authService *AuthService) gin.HandlerFunc {
 
 		if err != nil || tokenString == "" {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-				"error": err,
+				"error": err.Error(),
 			})
 			return
 		}

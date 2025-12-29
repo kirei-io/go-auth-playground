@@ -80,7 +80,7 @@ func (s *AuthService) ExtractToken(authBearer string) (string, error) {
 	return parts[1], nil
 }
 
-func (s *AuthService) Signup(ctx context.Context, dto *CreateAuthRequest) (*AuthResponse, error) {
+func (s *AuthService) Signup(ctx context.Context, dto *CreateCreateRequest) (*AuthResponse, error) {
 	role, err := s.repo.GetRoleByName(ctx, "user")
 	if err != nil {
 		return nil, fmt.Errorf("default role not found")
@@ -127,17 +127,29 @@ func (s *AuthService) Login(ctx context.Context, dto *LoginRequest) (*AuthRespon
 	return &resp, nil
 }
 
-func (s *AuthService) Self(ctx context.Context, email string, accessToken string) (*AuthResponse, error) {
+func (s *AuthService) Self(ctx context.Context, email string) (*AuthResponse, error) {
 	user, err := s.repo.GetByEmail(ctx, email)
 	if err != nil {
 		return nil, err
 	}
 
-	resp := s.userModelToResponseDto(user, accessToken)
+	resp := s.userModelToResponseDto(user, "")
 	return &resp, nil
 }
 
-func (s *AuthService) createUserFromDto(dto *CreateAuthRequest, passwordHash string) database.User {
+func (s *AuthService) Delete(ctx context.Context, userID uuid.UUID) (*AuthResponse, error) {
+	user, err := s.repo.Delete(ctx, userID, false)
+
+	if err != nil {
+		return nil, err
+	}
+
+	resp := s.userModelToResponseDto(user, "")
+
+	return &resp, nil
+}
+
+func (s *AuthService) createUserFromDto(dto *CreateCreateRequest, passwordHash string) database.User {
 	u := database.User{
 		Email:        dto.Email,
 		PasswordHash: passwordHash,

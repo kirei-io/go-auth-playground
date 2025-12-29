@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var Clinet *gorm.DB
+var Client *gorm.DB
 
 func InitDb(cfg *core.DbConfig) {
 	dsn := fmt.Sprintf(
@@ -30,7 +30,7 @@ func InitDb(cfg *core.DbConfig) {
 	}
 
 	seedRoles(db)
-	Clinet = db
+	Client = db
 }
 
 func seedRoles(db *gorm.DB) {

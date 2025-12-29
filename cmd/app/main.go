@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/kirei-io/go-auth-playground/internal/auth"
@@ -17,19 +16,29 @@ func main() {
 
 	r := gin.Default()
 
-	authRepo := auth.NewAuthRepository(database.Clinet)
+	authRepo := auth.NewAuthRepository(database.Client)
 	authService := auth.NewAuthService(&cfg.Auth, authRepo)
 	authController := auth.NewAuthController(authService)
 
-	r.GET("/ping", func(c *gin.Context) {
+	v1 := r.Group("/api/v1")
+	{
+		authGroup := v1.Group("/auth")
+		{
+			authGroup.POST("/signup", authController.Signup)
+			authGroup.POST("/login", authController.Login)
 
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong",
-			"ctrl":    authController,
-		})
-	})
+			protected := authGroup.Group("")
+			protected.Use(auth.AuthMiddleware(authService))
+			{
+				protected.GET("/self", authController.Self)
+			}
+		}
+	}
 
-	if err := r.Run(fmt.Sprintf(":%s", fmt.Sprint(cfg.App.Port))); err != nil {
+	addr := fmt.Sprintf(":%d", cfg.App.Port)
+	log.Printf("Server is running on %s", addr)
+
+	if err := r.Run(addr); err != nil {
 		log.Fatalf("failed to run server: %v", err)
 	}
 

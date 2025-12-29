@@ -40,9 +40,46 @@ func (repo *AuthRepository) GetByEmail(ctx context.Context, email string) (*data
 	return &user, nil
 }
 
-func (repo *AuthRepository) deleteTransaction(ctx context.Context, userID uuid.UUID, hard bool) (*database.User, error) {
+func (repo *AuthRepository) Update(ctx context.Context, userID uuid.UUID, updateDto UpdateUserRequest) (*database.User, error) {
 	var user database.User
-	err := repo.db.Transaction(func(tx *gorm.DB) error {
+
+	err := repo.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		u, err := gorm.G[database.User](tx).Preload("Role", nil).Where("id = ?", userID).Take(ctx)
+		if err != nil {
+			return err
+		}
+
+		if updateDto.Name != nil {
+			u.Name = *updateDto.Name
+		}
+		if updateDto.Password != nil {
+			u.PasswordHash = *updateDto.Password
+		}
+
+		rows, err := gorm.G[database.User](tx).Where("id = ?", userID).Updates(ctx, u)
+
+		if err != nil {
+			return err
+		}
+
+		if rows == 0 {
+			return fmt.Errorf("Not update rows when update user")
+		}
+
+		user = u
+		return nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func (repo *AuthRepository) Delete(ctx context.Context, userID uuid.UUID, hard bool) (*database.User, error) {
+	var user database.User
+	err := repo.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		currentTx := tx
 		if hard {
 			currentTx = tx.Unscoped()
@@ -68,12 +105,4 @@ func (repo *AuthRepository) deleteTransaction(ctx context.Context, userID uuid.U
 	})
 
 	return &user, err
-}
-
-func (repo *AuthRepository) Delete(ctx context.Context, userID uuid.UUID) (*database.User, error) {
-	return repo.deleteTransaction(ctx, userID, false)
-}
-
-func (repo *AuthRepository) PermamentDelete(ctx context.Context, userID uuid.UUID) (*database.User, error) {
-	return repo.deleteTransaction(ctx, userID, true)
 }

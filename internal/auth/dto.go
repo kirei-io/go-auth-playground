@@ -14,11 +14,16 @@ type JWTClaims struct {
 	jwt.RegisteredClaims
 }
 
-type CreateAuthRequest struct {
+type CreateCreateRequest struct {
 	Email    string  `json:"email" binding:"required,email"`
 	Password string  `json:"password" binding:"required,min=6"`
 	Name     *string `json:"name"`
 	Login    *string `json:"login"`
+}
+
+type UpdateUserRequest struct {
+	Name     *string `json:"name"`
+	Password *string `json:"password"`
 }
 
 type LoginRequest struct {
