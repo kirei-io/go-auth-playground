@@ -1,0 +1,16 @@
+<div class="form-container">
+    <form [formGroup]="formGroup()" (ngSubmit)="onSubmit()">
+        <div class="form-content">
+            <ng-content></ng-content>
+        </div>
+
+        <div class="form-actions">
+            <button app-button
+                type="submit"
+                [disabled]="formGroup().invalid && formGroup().touched"
+            >
+                {{submitLabel()}}
+            </button>
+        </div>
+    </form>
+</div>

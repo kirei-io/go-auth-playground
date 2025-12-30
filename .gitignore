@@ -25,3 +25,6 @@ Thumbs.db
 
 *.log
 logs/
+
+*/node_modules/
+*/.angular/cache/

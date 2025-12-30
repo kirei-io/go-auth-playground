@@ -1,0 +1,25 @@
+
+@if (label()) {
+    <label class="input-label" [for]="name()">{{label()}}</label>
+}
+
+<input
+    [type]="inputType()"
+    [name]="name()"
+    [placeholder]="placeholder()"
+    [id]="name()"
+    [disabled]="isDisabled()"
+    [value]="control()?.value"
+    (input)="onInputChange($event)"
+    (blur)="onBlur()"
+    [class.is-invalid]="control()?.invalid && control()?.touched"
+>
+
+@if (control()?.invalid && control()?.touched) {
+    <div class="error-message">
+        @for (key of errorKeys; track key) {
+            @let errorMessage = errorsMap()[key];
+            <span class="error-text">{{errorMessage || key}}</span>
+        }
+    </div>
+}
