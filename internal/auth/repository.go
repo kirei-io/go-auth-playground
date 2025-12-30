@@ -40,6 +40,15 @@ func (repo *AuthRepository) GetByEmail(ctx context.Context, email string) (*data
 	return &user, nil
 }
 
+func (repo *AuthRepository) GetByID(ctx context.Context, userID uuid.UUID) (*database.User, error) {
+	user, err := gorm.G[database.User](repo.db).Preload("Role", nil).Where("id = ?", userID).Take(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
 func (repo *AuthRepository) Update(ctx context.Context, userID uuid.UUID, updateDto UpdateUserRequest) (*database.User, error) {
 	var user database.User
 

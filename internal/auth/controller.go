@@ -77,7 +77,7 @@ func (ctrl *AuthController) Self(ctx *gin.Context) {
 		return
 	}
 
-	resp, err := ctrl.authService.Self(ctx.Request.Context(), userClaims.Email)
+	resp, err := ctrl.authService.Self(ctx.Request.Context(), userClaims.UserID)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),

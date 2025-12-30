@@ -25,11 +25,13 @@ func InitDb(cfg *core.DbConfig) {
 	log.Println("Success connect to DB!")
 
 	err = db.AutoMigrate(&Role{}, &User{})
+
 	if err != nil {
 		log.Fatal("Migration failed:", err)
 	}
 
 	seedRoles(db)
+
 	Client = db
 }
 

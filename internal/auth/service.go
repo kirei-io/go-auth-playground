@@ -104,7 +104,7 @@ func (s *AuthService) Signup(ctx context.Context, dto *CreateCreateRequest) (*Au
 		return nil, err
 	}
 
-	resp := s.userModelToResponseDto(&user, accessToken)
+	resp := s.userModelToResponseDto(&user, &accessToken)
 	return &resp, nil
 }
 
@@ -123,17 +123,17 @@ func (s *AuthService) Login(ctx context.Context, dto *LoginRequest) (*AuthRespon
 		return nil, err
 	}
 
-	resp := s.userModelToResponseDto(user, accessToken)
+	resp := s.userModelToResponseDto(user, &accessToken)
 	return &resp, nil
 }
 
-func (s *AuthService) Self(ctx context.Context, email string) (*AuthResponse, error) {
-	user, err := s.repo.GetByEmail(ctx, email)
+func (s *AuthService) Self(ctx context.Context, userID uuid.UUID) (*AuthResponse, error) {
+	user, err := s.repo.GetByID(ctx, userID)
 	if err != nil {
 		return nil, err
 	}
 
-	resp := s.userModelToResponseDto(user, "")
+	resp := s.userModelToResponseDto(user, nil)
 	return &resp, nil
 }
 
@@ -144,7 +144,7 @@ func (s *AuthService) Delete(ctx context.Context, userID uuid.UUID) (*AuthRespon
 		return nil, err
 	}
 
-	resp := s.userModelToResponseDto(user, "")
+	resp := s.userModelToResponseDto(user, nil)
 
 	return &resp, nil
 }
@@ -165,14 +165,20 @@ func (s *AuthService) createUserFromDto(dto *CreateCreateRequest, passwordHash s
 	return u
 }
 
-func (s *AuthService) userModelToResponseDto(model *database.User, accessToken string) AuthResponse {
-	return AuthResponse{
-		AccessToken: accessToken,
-		Email:       model.Email,
-		Role:        model.Role.Name,
-		Name:        &model.Name,
-		Login:       &model.Login,
-		CreatedAt:   model.CreatedAt,
-		UpdatedAt:   model.UpdatedAt,
+func (s *AuthService) userModelToResponseDto(model *database.User, accessToken *string) AuthResponse {
+
+	resp := AuthResponse{
+		Email:     model.Email,
+		Role:      model.Role.Name,
+		Name:      &model.Name,
+		Login:     &model.Login,
+		CreatedAt: model.CreatedAt,
+		UpdatedAt: model.UpdatedAt,
 	}
+
+	if accessToken != nil {
+		resp.AccessToken = *accessToken
+	}
+
+	return resp
 }
