@@ -1,0 +1,15 @@
+#syntax=docker/dockerfile:1
+
+FROM node:24-alpine
+
+WORKDIR /app
+
+RUN npm install -g @angular/cli@latest
+
+COPY package*.json ./
+
+RUN npm ci
+
+COPY . .
+
+CMD ["ng", "serve", "--host", "0.0.0.0", "--poll", "1000"]

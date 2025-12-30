@@ -1,4 +1,6 @@
-<app-form [formGroup]="loginForm" title="Login" (submitted)="onLogin()" submitLabel="Login">
-    <app-input name="email" label="Email" placeholder="exampe@mail.co" formControlName="email" [errorsMap]="emailErrors"></app-input>
-    <app-input name="password" label="Password" placeholder="******" formControlName="password" [errorsMap]="passwordErrors"></app-input>
-</app-form>
+@if (!isLoading()) {
+    <app-form [formGroup]="loginForm" title="Login" (submitted)="onLogin()" submitLabel="Login">
+        <app-input name="email" label="Email" placeholder="exampe@mail.co" formControlName="email" [errorsMap]="emailErrors"></app-input>
+        <app-input name="password" label="Password" placeholder="******" formControlName="password" [errorsMap]="passwordErrors"></app-input>
+    </app-form>
+}
