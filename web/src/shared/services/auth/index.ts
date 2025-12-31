@@ -1,0 +1,5 @@
+export type { IAuthStrategy } from './interface'
+export { AuthProxyStrategy } from './proxy'
+export { AuthConfigService, STRATEGY_TYPE } from './config'
+export type { TStrategy } from './config'
+export { AUTH_STRATEGY } from './token'

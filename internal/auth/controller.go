@@ -117,5 +117,5 @@ func (ctrl *AuthController) LoginV2(ctx *gin.Context) {
 		false,
 		true,
 	)
-	ctx.JSON(http.StatusOK, gin.H{"status": "OK"})
+	ctx.JSON(http.StatusOK, gin.H{"data": resp})
 }

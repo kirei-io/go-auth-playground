@@ -1,9 +1,9 @@
-import { Component, inject, resource, signal } from "@angular/core";
+import { Component, inject, resource, Signal, signal } from "@angular/core";
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { FormComponent } from "../../shared/components/form/form";
 import { InputComponent } from "../../shared/components/input/input";
-import { AuthSerivce } from "../../shared/services/auth";
 import { catchError, of } from "rxjs";
+import { AUTH_STRATEGY, AuthConfigService, TStrategy } from "../../shared/services/auth";
 @Component({
     selector: 'app-login-form',
     templateUrl: './login-form.html',
@@ -11,7 +11,8 @@ import { catchError, of } from "rxjs";
 })
 export class LoginFormComponent {
     private readonly fb = inject(NonNullableFormBuilder)
-    private readonly authService = inject(AuthSerivce)
+    private readonly authService = inject(AUTH_STRATEGY)
+    private readonly authConfigService = inject(AuthConfigService)
 
     public readonly isLoading = signal(false)
 
@@ -30,6 +31,10 @@ export class LoginFormComponent {
         'minLength': 'Password should be more 6 chars'
     }
 
+    public get strategy(): Signal<TStrategy> {
+        return this.authConfigService.authStrategy
+    }
+
     public async onLogin(): Promise<void> {
         if (this.loginForm.invalid) {
             return
@@ -41,6 +46,5 @@ export class LoginFormComponent {
         this.authService.login(credentials).pipe(
             catchError((err => of(err)))).subscribe(console.log)
         this.isLoading.set(false)
-
     }
 }

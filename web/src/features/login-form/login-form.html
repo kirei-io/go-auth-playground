@@ -1,3 +1,7 @@
+<h3>
+    <span>Current auth strategy: </span>
+    <span>{{strategy()}}</span>
+</h3>
 <app-form [formGroup]="loginForm" title="Login" (submitted)="onLogin()" submitLabel="Login">
     <app-input name="email" label="Email" inputType="email" placeholder="exampe@mail.co" formControlName="email" [errorsMap]="emailErrors"></app-input>
     <app-input name="password" label="Password" inputType="password" placeholder="******" formControlName="password" [errorsMap]="passwordErrors"></app-input>
