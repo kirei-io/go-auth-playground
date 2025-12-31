@@ -14,6 +14,7 @@ export class InputComponent implements ControlValueAccessor {
     public readonly inputType = input<string>("text")
     public readonly placeholder = input<string>("text")
     public readonly name = input.required<string>()
+    public readonly authocomplite = input<string>("off")
     public readonly errorsMap = input<Record<string, string>>({});
     public readonly control = computed(() => this.controlDir?.control || null);
 

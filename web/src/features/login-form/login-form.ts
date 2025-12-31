@@ -1,7 +1,9 @@
-import { Component, inject, signal } from "@angular/core";
+import { Component, inject, resource, signal } from "@angular/core";
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { FormComponent } from "../../shared/components/form/form";
 import { InputComponent } from "../../shared/components/input/input";
+import { AuthSerivce } from "../../shared/services/auth";
+import { catchError, of } from "rxjs";
 @Component({
     selector: 'app-login-form',
     templateUrl: './login-form.html',
@@ -9,6 +11,7 @@ import { InputComponent } from "../../shared/components/input/input";
 })
 export class LoginFormComponent {
     private readonly fb = inject(NonNullableFormBuilder)
+    private readonly authService = inject(AuthSerivce)
 
     public readonly isLoading = signal(false)
 
@@ -31,14 +34,13 @@ export class LoginFormComponent {
         if (this.loginForm.invalid) {
             return
         }
-
         this.isLoading.set(true)
         const credentials = this.loginForm.getRawValue()
 
-        console.log('login form', credentials)
 
-        setTimeout(() => {
-            this.isLoading.set(false)
-        }, 2000)
+        this.authService.login(credentials).pipe(
+            catchError((err => of(err)))).subscribe(console.log)
+        this.isLoading.set(false)
+
     }
 }

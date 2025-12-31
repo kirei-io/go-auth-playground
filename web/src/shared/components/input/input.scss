@@ -1,0 +1,36 @@
+.input-wrapper:host {
+    display: flex;
+    flex-direction: column;
+    margin: 0.5rem 0;
+    padding-bottom: 18px;
+
+    .input {
+        &-label {
+            font-size: 0.8rem;
+            color: gray;
+        }
+
+        &-content {
+            margin: 0.2rem 0;
+            padding: 0.4rem 0.4rem;
+            font-size: 1rem;
+            border-radius: 0.5rem;
+
+            &.is-invalid {
+                border-color: red;
+            }
+        }
+    }
+
+
+    .error {
+        &-text {
+            font-size: 0.8rem;
+            color: red;
+        }
+    }
+}
+
+.input-wrapper:host.ng-invalid.ng-touched {
+    padding-bottom: 0;
+}

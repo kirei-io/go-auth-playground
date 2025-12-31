@@ -4,12 +4,14 @@
 }
 
 <input
+    class="input-content"
     [type]="inputType()"
     [name]="name()"
     [placeholder]="placeholder()"
     [id]="name()"
     [disabled]="isDisabled()"
     [value]="control()?.value"
+    [autocomplete]="authocomplite()"
     (input)="onInputChange($event)"
     (blur)="onBlur()"
     [class.is-invalid]="control()?.invalid && control()?.touched"

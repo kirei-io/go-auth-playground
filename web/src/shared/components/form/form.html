@@ -1,4 +1,5 @@
 <div class="form-container">
+    <h2 class="form-title">{{title()}}</h2>
     <form [formGroup]="formGroup()" (ngSubmit)="onSubmit()">
         <div class="form-content">
             <ng-content></ng-content>

@@ -1,0 +1,11 @@
+.app-button:host {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding: 0.4rem 0.4rem;
+    border-radius: 0.5rem;
+    height: 100%;
+    max-height: 40px;
+    font-size: 1rem;
+    justify-content: center;
+}
