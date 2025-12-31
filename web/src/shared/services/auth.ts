@@ -1,9 +1,9 @@
 import { HttpClient } from "@angular/common/http";
 import { DestroyRef, inject, Injectable } from "@angular/core";
-import { TLoginRequest, TLoginResponse } from "../components/types/login";
+import { TLoginRequest, TLoginResponse } from "../types/login";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Observable, tap } from "rxjs";
-import { TSignupRequest, TSignupResponse } from "../components/types/signup";
+import { TSignupRequest, TSignupResponse } from "../types/signup";
 import { ActivatedRoute, Router } from "@angular/router";
 
 @Injectable({
