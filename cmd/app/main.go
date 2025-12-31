@@ -54,6 +54,20 @@ func main() {
 		}
 	}
 
+	v2 := r.Group("/api/v2")
+	{
+		authV2Group := v2.Group("/auth")
+		{
+			authV2Group.POST("/login", authController.LoginV2)
+
+			protectedV2 := authV2Group.Group("")
+			protectedV2.Use(auth.AuthMiddlewareV2(authService))
+			{
+				protectedV2.GET("/self", authController.Self)
+			}
+		}
+	}
+
 	addr := fmt.Sprintf(":%d", cfg.App.Port)
 	log.Printf("Server is running on %s", addr)
 

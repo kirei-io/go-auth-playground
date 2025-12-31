@@ -2,6 +2,7 @@ package auth
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -88,4 +89,33 @@ func (ctrl *AuthController) Self(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"data": resp,
 	})
+}
+
+func (ctrl *AuthController) LoginV2(ctx *gin.Context) {
+	var dto LoginRequest
+	if err := ctx.ShouldBindBodyWithJSON(&dto); err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	resp, err := ctrl.authService.Login(ctx.Request.Context(), &dto)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	ctx.SetCookie(
+		"access_token",
+		resp.AccessToken,
+		int(24*time.Hour),
+		"/",
+		"localhost",
+		false,
+		true,
+	)
+	ctx.JSON(http.StatusOK, gin.H{"status": "OK"})
 }
