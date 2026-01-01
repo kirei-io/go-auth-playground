@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig, inject, provideAppInitializer, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -17,6 +17,6 @@ export const appConfig: ApplicationConfig = {
     {
       provide: AUTH_STRATEGY,
       useClass: AuthProxyStrategy
-    }
+    },
   ]
 };

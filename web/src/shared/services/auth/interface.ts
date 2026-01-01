@@ -5,4 +5,5 @@ export interface IAuthStrategy {
     logout(): void
     getHeaders(): Record<string, string>
     isAuth(): boolean
+    checkAuth(): Observable<boolean>
 }

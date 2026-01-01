@@ -37,4 +37,8 @@ export class AuthProxyStrategy implements IAuthStrategy {
     public isAuth() {
         return this.active.isAuth()
     }
+
+    public checkAuth(): Observable<boolean> {
+        return this.active.checkAuth();
+    }
 }

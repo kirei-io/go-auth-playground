@@ -1,14 +1,23 @@
-import { HttpHandlerFn, HttpRequest } from "@angular/common/http";
+import { HttpErrorResponse, HttpInterceptorFn } from "@angular/common/http";
 import { inject } from "@angular/core";
-import { AUTH_STRATEGY } from "../services/auth";
+import { catchError, throwError } from "rxjs";
+import { UserStateService } from "../services/user-storage";
+import { Router } from "@angular/router";
 
-export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn) {
-    const authService = inject(AUTH_STRATEGY);
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+    const userState = inject(UserStateService);
+    const router = inject(Router);
 
-    const modifiedReq = req.clone({
-        setHeaders: authService.getHeaders(),
-        withCredentials: true
-    })
+    return next(req).pipe(
+        catchError((error: HttpErrorResponse) => {
+            if (error.status === 401) {
+                userState.setUnauthenticated();
 
-    return next(modifiedReq)
-}
+                if (!router.url.includes('login')) {
+                    router.navigate(['/login']);
+                }
+            }
+            return throwError(() => error);
+        })
+    );
+};

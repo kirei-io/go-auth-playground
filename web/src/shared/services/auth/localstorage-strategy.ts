@@ -1,23 +1,56 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { IAuthStrategy } from "./interface";
-import { Observable } from "rxjs";
+import { Observable, of, tap } from "rxjs";
+import { TLoginRequest, TLoginResponse } from "../../types/login";
+import { HttpClient } from "@angular/common/http";
+import { LocalStorageService } from "../localstorage";
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthLocalStorageStrategy implements IAuthStrategy {
-    login(body: unknown): Observable<unknown> {
-        throw new Error("Method not implemented.");
+    private readonly httpService = inject(HttpClient);
+    private readonly localstorageKey = 'access_token'
+    private readonly localStorageService = inject(LocalStorageService)
+
+    public login(body: TLoginRequest): Observable<TLoginResponse> {
+        const url = 'http://localhost/api/v1/auth/login'
+        this.removeAccessToken()
+
+        return this.httpService.post<TLoginResponse>(url, body)
+            .pipe(
+                tap((res) => {
+                    this.setAccessToken(res.data.token)
+                })
+            )
     }
-    logout(): void {
-        throw new Error("Method not implemented.");
+    public logout(): void {
+        this.removeAccessToken()
     }
-    getHeaders(): Record<string, string> {
-        throw new Error("Method not implemented.");
+    public getHeaders(): Record<string, string> {
+        const token = this.getAccessToken()
+        return token !== null ? { 'Authorization': `Bearer ${token}` } : {}
     }
 
-    isAuth() {
-        return true
+    public isAuth() {
+        return this.getAccessToken() !== null
+    }
+
+    public checkAuth(): Observable<boolean> {
+        const hasToken = Boolean(this.getAccessToken())
+        return of(hasToken)
+    }
+
+    private setAccessToken(token: string) {
+        this.localStorageService.setItem(this.localstorageKey, token)
+    }
+
+    private removeAccessToken(): void {
+        this.localStorageService.removeItem(this.localstorageKey)
+    }
+
+    private getAccessToken(): string | null {
+        return this.localStorageService.getItem(this.localstorageKey)
     }
 
 }

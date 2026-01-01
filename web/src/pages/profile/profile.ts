@@ -12,8 +12,6 @@ export class ProfilePage implements OnInit {
     user = signal<unknown>(null)
 
     ngOnInit(): void {
-        this.userService.getSelf().subscribe((data: any) => {
-            this.user.set(data.data)
-        })
+
     }
 }
